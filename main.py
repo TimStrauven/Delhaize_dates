@@ -5,6 +5,10 @@ from kivy.lang import Builder
 from kivy.clock import Clock
 import numpy as np
 import cv2
+from kivy.utils import platform
+
+if platform == 'android':
+    from android.permissions import request_permissions, Permission
 
 Builder.load_file('camera.kv')
 
@@ -20,6 +24,12 @@ class MyApp(App):
     counter = 0
 
     def build(self):
+        if platform == 'android':
+            request_permissions([
+                Permission.CAMERA,
+                Permission.WRITE_EXTERNAL_STORAGE,
+                Permission.READ_EXTERNAL_STORAGE
+            ])
         return MyLayout()
 
     def on_start(self):
