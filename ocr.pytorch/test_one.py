@@ -6,6 +6,8 @@ import numpy as np
 from PIL import Image
 from glob import glob
 import cv2
+import re
+from text_date_extraction import extract_date
 
 def single_pic_proc(image_file):
     image = np.array(Image.open(image_file).convert('RGB'))
@@ -23,5 +25,11 @@ if __name__ == '__main__':
         filename = sys.argv[1]
         if filename.endswith('jpg') or filename.endswith('png'):
             result, image_framed = single_pic_proc(filename)
-            print(result)
-            dis(image_framed)
+
+            txt_out = ""
+            for key in result:
+                txt_out += f" {result[key][1]}"
+            print(txt_out)
+
+            exp_date = extract_date(txt_out)
+            print(exp_date)
