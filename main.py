@@ -3,6 +3,7 @@ from kivy.uix.camera import Camera
 from kivy.uix.boxlayout import BoxLayout
 from kivy.lang import Builder
 from kivy.clock import Clock
+from kivy.properties import NumericProperty
 import numpy as np
 import cv2
 from kivy.utils import platform
@@ -15,13 +16,29 @@ Builder.load_file('camera.kv')
 class AndroidCamera(Camera):
     camera_resolution = (640, 480)
     cam_ratio = camera_resolution[0] / camera_resolution[1]
+    #boundbox = (-camera_resolution[0] / 2, -camera_resolution[1] / 2, camera_resolution[0] / 2, camera_resolution[1] / 2)
+    boundbox = (0, 0, 0, 0)
+
+    def on_tex(self, camera):
+        self.texture = texture = camera.texture
+        # get some region
+        self.texture = self.texture.get_region(0, 0, 640, 480)
+        self.texture_size = list(texture.size)
+        self.canvas.ask_update()
 
 class MyLayout(BoxLayout):
-    pass
+    def capture(self):
+        app = App.get_running_app()
+        app.get_frame(0)
 
 
 class MyApp(App):
     counter = 0
+
+    if platform == 'android':
+        rotation = NumericProperty(-90)
+    else:
+        rotation = NumericProperty(0)
 
     def build(self):
         if platform == 'android':
@@ -30,10 +47,12 @@ class MyApp(App):
                 Permission.WRITE_EXTERNAL_STORAGE,
                 Permission.READ_EXTERNAL_STORAGE
             ])
+
         return MyLayout()
 
     def on_start(self):
-        Clock.schedule_once(self.get_frame, 5)
+        # Clock.schedule_once(self.get_frame, 3)
+        pass
 
     def get_frame(self, dt):
         cam = self.root.ids.a_cam
@@ -43,7 +62,7 @@ class MyApp(App):
         gray = cv2.cvtColor(frame, cv2.COLOR_RGBA2GRAY)
         self.root.ids.frame_counter.text = f'frame: {self.counter}'
         self.counter += 1
-        Clock.schedule_once(self.get_frame, 0.25)
+        # Clock.schedule_once(self.get_frame, 0.25)
 
 if __name__ == "__main__":
     MyApp().run()

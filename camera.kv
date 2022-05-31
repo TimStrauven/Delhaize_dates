@@ -4,11 +4,10 @@
     size: root.width, root.height
 
     GridLayout:
-        rows: 2
+        rows: 3
 
         RelativeLayout:
             size_hint: 1, 0.8
-
             AndroidCamera:
                 index: 0
                 id: a_cam
@@ -18,7 +17,7 @@
                 canvas.before:
                     PushMatrix
                     Rotate:
-                        angle: 0
+                        angle: app.rotation
                         origin: self.center
                     Scale:
                         x: self.cam_ratio
@@ -26,9 +25,24 @@
                         origin: self.center
                 canvas.after:
                     PopMatrix
+                    Rotate:
+                        angle: app.rotation
+                        origin: self.center
+                    Scale:
+                        x: self.cam_ratio
+                        y: self.cam_ratio
+                        origin: self.center
+                    Line:
+                        width: 2.
+                        rectangle: (self.width/2, self.height/2, a_cam.width/10, self.height/10)
 
         Label:
             size_hint: 1, 0.2
             id: frame_counter
             font_size: self.height * 0.4
             text: ''
+        Button:
+            id: btn_capture
+            text: 'Capture'
+            size_hint: 1, 0.2
+            on_press: root.capture()
