@@ -133,3 +133,6 @@ dmypy.json
 
 ocr.pytorch/Korean dataset dates/
 ocr.pytorch/Delhaize img/
+ocr.pytorch/test_images/
+ocr.pytorch/test_result/
+ocr.pytorch/my_capture.png

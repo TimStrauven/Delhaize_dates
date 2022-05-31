@@ -7,6 +7,7 @@ from kivy.properties import NumericProperty
 import numpy as np
 import cv2
 from kivy.utils import platform
+from kivy.graphics.texture import Texture
 
 if platform == 'android':
     # Android specific imports
@@ -19,15 +20,10 @@ Builder.load_file('camera.kv')
 class AndroidCamera(Camera):
     camera_resolution = (640, 480)
     cam_ratio = camera_resolution[0] / camera_resolution[1]
-    #boundbox = (-camera_resolution[0] / 2, -camera_resolution[1] / 2, camera_resolution[0] / 2, camera_resolution[1] / 2)
-    boundbox = (0, 0, 0, 0)
 
-    def on_tex(self, camera):
-        self.texture = texture = camera.texture
-        # get some region
-        self.texture = self.texture.get_region(0, 0, 640, 480)
-        self.texture_size = list(texture.size)
-        self.canvas.ask_update()
+class CropCam(AndroidCamera):
+    crop_camera_resolution = (100, 50)
+    crop_cam_ratio = crop_camera_resolution[0] / crop_camera_resolution[1]
 
 
 class MyLayout(BoxLayout):
@@ -55,8 +51,7 @@ class MyApp(App):
         return MyLayout()
 
     def on_start(self):
-        # Clock.schedule_once(self.get_frame, 3)
-        pass
+        Clock.schedule_once(self.get_frame, 3)
 
     def get_frame(self, dt):
         cam = self.root.ids.a_cam
@@ -68,7 +63,7 @@ class MyApp(App):
         gray = cv2.cvtColor(frame, cv2.COLOR_RGBA2GRAY)
         self.root.ids.frame_counter.text = f'frame: {self.counter}'
         self.counter += 1
-        # Clock.schedule_once(self.get_frame, 0.25)
+        Clock.schedule_once(self.get_frame, 0.25)
 
 
 if __name__ == "__main__":

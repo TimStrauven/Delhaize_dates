@@ -32,9 +32,12 @@
                         x: self.cam_ratio
                         y: self.cam_ratio
                         origin: self.center
-                    Line:
-                        width: 2.
-                        rectangle: (self.width/2, self.height/2, a_cam.width/10, self.height/10)
+                    CropCam:
+                        index: 0
+                        id: crop_cam
+                        resolution: self.crop_camera_resolution
+                        allow_stretch: True
+                        play: True
 
         Label:
             size_hint: 1, 0.2
