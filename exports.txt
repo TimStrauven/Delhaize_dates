@@ -1,2 +1,0 @@
-export JAVA_HOME='/usr/lib/jvm/jdk-17'
-export JDK_HOME='/usr/lib/jvm/jdk-17'

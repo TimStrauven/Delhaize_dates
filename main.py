@@ -9,9 +9,12 @@ import cv2
 from kivy.utils import platform
 
 if platform == 'android':
+    # Android specific imports
+    # looks like error but works fine on android
     from android.permissions import request_permissions, Permission
 
 Builder.load_file('camera.kv')
+
 
 class AndroidCamera(Camera):
     camera_resolution = (640, 480)
@@ -25,6 +28,7 @@ class AndroidCamera(Camera):
         self.texture = self.texture.get_region(0, 0, 640, 480)
         self.texture_size = list(texture.size)
         self.canvas.ask_update()
+
 
 class MyLayout(BoxLayout):
     def capture(self):
@@ -56,13 +60,16 @@ class MyApp(App):
 
     def get_frame(self, dt):
         cam = self.root.ids.a_cam
-        image_object = cam.export_as_image(scale=round((400 / int(cam.height)), 2))
+        image_object = cam.export_as_image(
+            scale=round((400 / int(cam.height)), 2))
         w, h = image_object._texture.size
-        frame = np.frombuffer(image_object._texture.pixels, 'uint8').reshape(h, w, 4)
+        frame = np.frombuffer(image_object._texture.pixels,
+                              'uint8').reshape(h, w, 4)
         gray = cv2.cvtColor(frame, cv2.COLOR_RGBA2GRAY)
         self.root.ids.frame_counter.text = f'frame: {self.counter}'
         self.counter += 1
         # Clock.schedule_once(self.get_frame, 0.25)
+
 
 if __name__ == "__main__":
     MyApp().run()
