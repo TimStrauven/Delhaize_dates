@@ -26,7 +26,10 @@ if __name__ == '__main__':
         filename = sys.argv[1]
         if filename.endswith('jpg') or filename.endswith('png'):
             result, image_framed = single_pic_proc(filename)
-            print(result)
+            #print(result)
+            allresults = ""
             for key in result:
-                print(result[key][1])
+                #print(result[key][1])
+                allresults += result[key][1] + '\n'
+            print(allresults)
             #dis(image_framed)
