@@ -63,7 +63,7 @@ def expiry_date() -> dict:
             txt_out = ""
             for key in result:
                 txt_out += f" {result[key][1]}"
-            #print(txt_out)
+            print(txt_out)
 
             if txt_out == "":
                 return {"prediction": "The model could not detect anything."}
@@ -73,4 +73,4 @@ def expiry_date() -> dict:
 
 
 if __name__ == "__main__":
-    app.run()
+    app.run(debug=True)
