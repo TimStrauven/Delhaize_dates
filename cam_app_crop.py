@@ -1,5 +1,3 @@
-import os
-import subprocess
 from kivy.app import App
 from kivy.uix.camera import Camera
 from kivy.core.image import Image
@@ -62,6 +60,8 @@ class CamTextures(Camera):
         self.add_widget(self.lbl)
         self.capturing = True
         self.triggercount = 0
+        self.date = ""
+        self.datefound = False
         Clock.schedule_once(self.get_frame, 0.5)
 
     def on_touch_down(self, touch):
@@ -70,6 +70,7 @@ class CamTextures(Camera):
                 self.capturing = False
             else:
                 self.capturing = True
+                self.datefound = False
                 Clock.schedule_once(self.get_frame, 0.25)
             return True
 
@@ -80,18 +81,27 @@ class CamTextures(Camera):
             image = PILImage.open('my_capture.png').convert('RGB')
             image = ImageOps.exif_transpose(image)
             image = np.array(image)
-            lbltxt = recognizer.recognize(image)
-            self.lbl.text = lbltxt
-            if extract_date(lbltxt):
+            self.date = recognizer.recognize(image)
+            self.lbl.text = "Detecting dates... " + '\n' + self.date
+            self.lbl.color = (1, 1, 1)
+            corrected_Date = extract_date(self.date)
+            if corrected_Date is not False:
                 self.triggercount += 1
+                self.lbl.text = corrected_Date
                 if self.triggercount > 3:
                     self.capturing = False
                     self.triggercount = 0
+                    self.datefound = True
             else:
                 self.triggercount = 0
             Clock.schedule_once(self.get_frame, 0.25)
         else:
-            self.lbl.text = self.lbl.text + '\n' + 'Capturing stopped'
+            if self.datefound:
+                self.lbl.text = "Date detected:" + '\n' + self.date
+                self.lbl.color = (0, 1, 0)
+            else:
+                self.lbl.text = 'Capturing stopped.'
+                self.lbl.color = (1, 1, 1)
 
 
 class DelhaizeApp(App):
