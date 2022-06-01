@@ -28,6 +28,7 @@ if __name__ == '__main__':
 
             txt_out = ""
             for key in result:
+                #print(result[key][1])
                 txt_out += f" {result[key][1]}"
             print(txt_out)
 
