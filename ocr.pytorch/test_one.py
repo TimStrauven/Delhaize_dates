@@ -31,5 +31,8 @@ if __name__ == '__main__':
                 txt_out += f" {result[key][1]}"
             print(txt_out)
 
-            exp_date = extract_date(txt_out)
-            print(exp_date)
+            if txt_out == "":
+                print("The model could not detect anything.")
+            else:
+                exp_date = extract_date(txt_out)
+                print(exp_date)
