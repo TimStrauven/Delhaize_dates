@@ -13,6 +13,9 @@ from PIL import Image, ImageOps
 import numpy as np
 from ocr import ocr
 from text_date_extraction import extract_date
+from recognize.crnn_recognizer import PytorchOcr
+
+recognizer = PytorchOcr()
 
 app = Flask(__name__)
 
@@ -70,6 +73,19 @@ def expiry_date() -> dict:
             else:
                 exp_date = extract_date(txt_out)
                 return {"prediction": exp_date}
+
+@app.route("/cropped", methods=["POST"])
+def cropped_date() -> str:
+    """This function returns the expiry date of the image.
+    :return: A dictionary that contains the expiry date."""
+    image = request.files['image']
+    filename = image.filename
+    if filename.endswith('jpg') or filename.endswith('png'):
+        image = Image.open(image).convert('RGB')
+        image = ImageOps.exif_transpose(image)
+        image = np.array(image)
+        date = recognizer.recognize(image)
+        return date
 
 if __name__ == '__main__':
     # You want to put the value of the env variable PORT if it exist (some services only open specifiques ports)
