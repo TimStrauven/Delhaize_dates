@@ -43,9 +43,8 @@ def single_pic_proc(orig_image):
 def instructions() -> str:
     """This function returns the instructions for the API.
     :return: A dictionary that contains the instructions"""
-    return "Alive, please send a POST request to \
-        predict with the following fields: \
-        {'image' : '<image file>'}"
+    return "API is alive, please send a image as a POST request \
+        to the /expiry endpoint."
 
 @app.route("/expiry", methods=["POST"])
 def expiry_date() -> dict:
@@ -62,20 +61,6 @@ def expiry_date() -> dict:
             return {"texts": result_list}
     return {"prediction": "No text found"}
 
-
-@app.route("/predict", methods=["POST"])
-def predict() -> dict:
-    """
-    This API tries to find the expiry date from a picture. 
-    :return: dictionary that contains the expiry date of the picture.
-    """
-    image = request.files['image']
-    content_json = request.get_json()
-    keys = content_json.keys()
-    if "image" in keys:
-        return {"expiry_date": "2018-12-12"}
-    else:
-        return {"error": "no image in request"}
 
 if __name__ == "__main__":
     app.run()
