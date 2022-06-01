@@ -7,7 +7,7 @@ gcloud app deploy app.yaml --project=tactile-petal-350412
 Used environment: api_env
 """
 
-
+import os
 from flask import Flask, request
 from PIL import Image, ImageOps
 import numpy as np
